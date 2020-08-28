@@ -29,7 +29,10 @@ export class ArmorPiece implements Armor {
   name: string;
   type: string;
   baseWeight: number;
+  currentWeight: number;
   basePrice: number;
+  weightfactor: number;
+  sizefactor: number;
   skull: boolean;
   face: boolean;
   neck: boolean;
@@ -50,9 +53,13 @@ export class ArmorPiece implements Armor {
   feet: boolean;
   private _quality: number;
 
-  constructor(init?: Partial<ArmorPiece>) {
+  constructor(sf, init?: Partial<ArmorPiece>) {
     Object.assign(this, init);
     this.quality = 1;
+    this.weightfactor = 1.00;
+    this.sizefactor = sf;
+    this.countWeight();
+
   }
 
   get quality(): number {
@@ -83,6 +90,26 @@ export class ArmorPiece implements Armor {
     } else {
       this.quality -= 1;
     }
+  }
+
+  updateArmourSizefactor(sf){
+    this.sizefactor = sf;
+    this.countWeight();
+  }
+
+
+  increaseWeight() {
+    this.weightfactor = this.weightfactor + 0.05;
+    this.countWeight();
+  }
+
+  decreaseWeight() {
+    this.weightfactor = this.weightfactor - 0.05;
+    this.countWeight();
+  }
+
+  countWeight(){
+    this.currentWeight = this.baseWeight * this.weightfactor * this.sizefactor;
   }
 
   private maxQuality(): number {

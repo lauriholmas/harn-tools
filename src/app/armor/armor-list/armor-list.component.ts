@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import {ArmorLocationCodes, ArmorTypes} from '../shared/armor.data';
 import {Armor, ArmorPiece} from '../shared/armor.model';
 import {ArmorService} from '../shared/armor.service';
+import {forEach} from "typescript-collections/dist/lib/arrays";
 
 @Component({
   selector: 'app-armor-list',
@@ -15,6 +16,7 @@ export class ArmorListComponent implements OnInit {
   armorWorn: ArmorPiece[];
   armorLoaded: boolean;
   armorTypes: string[];
+  sizeFactor: number;
 
   constructor(private armorService: ArmorService) {
   }
@@ -22,6 +24,7 @@ export class ArmorListComponent implements OnInit {
   ngOnInit() {
     this.armorTypes = ArmorTypes;
     this.armorLoaded = false;
+    this.sizeFactor=1.00;
     this.armorService.loadArmor().subscribe(
       armorList => this.armorList = armorList,
       err => console.log(err),
@@ -48,7 +51,7 @@ export class ArmorListComponent implements OnInit {
   }
 
   addWornArmor(data: Armor) {
-    this.armorWorn.push(new ArmorPiece(data));
+    this.armorWorn.push(new ArmorPiece(this.sizeFactor,data));
   }
 
   removeWornArmor(data: ArmorPiece) {
@@ -118,4 +121,23 @@ export class ArmorListComponent implements OnInit {
     return props.join(', ');
   }
 
+  decreaseSizefactor(){
+    this.sizeFactor = this.sizeFactor - 0.1;
+    if( this.sizeFactor < 0.7){
+      this.sizeFactor = 0.7;
+    }
+    this.updateSizeFactor();
+  }
+
+  increaseSizefactor(){
+    this.sizeFactor = this.sizeFactor + 0.1;
+    if(this.sizeFactor > 1.3){
+      this.sizeFactor = 1.3;
+    }
+    this.updateSizeFactor();
+  }
+
+  updateSizeFactor(){
+    this.armorWorn.forEach(element => element.updateArmourSizefactor(this.sizeFactor))
+  }
 }

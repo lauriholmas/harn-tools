@@ -35,7 +35,7 @@ export class ProtectionTableComponent implements OnInit {
   totalWeight(): number {
     let weight = 0;
     for (const item of this.armorWorn) {
-      weight += item.baseWeight;
+      weight += item.currentWeight;
     }
     return weight;
   }

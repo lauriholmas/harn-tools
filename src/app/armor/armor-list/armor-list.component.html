@@ -1,6 +1,6 @@
 <div class="container-fluid page">
   <h2>Armor Builder - forked from <a href="https://streamweaver.github.io/harn-tools/armor"> streamweaver.github.io/harn-tools</a> </h2>
-  <p>A simple drag and drop armor assembler based on Harnmaster gold armor values.  Values not updated</p>
+  <p>A simple drag and drop armor assembler based on Harnmaster gold armor values. </p>
   <div class="row">
     <div class="col-md-4">
       <div class="card border border-dark">
@@ -24,7 +24,7 @@
             <div class="d-flex p-0 m-0">
               <div class="w-100 justify-content-between">
                 <h5 class="mb-1">{{item.name | titlecase}}</h5>
-                <small>{{item.basePrice}}d/{{item.baseWeight}}lb</small>
+                <small>{{item.baseWeight}} lb</small>
               </div>
               <div class="w-100 p-0 m-0">
                 <small>{{armorCoverageList(item) | titlecase}}</small>
@@ -37,32 +37,46 @@
     </div>
 
     <div class="col-md-4">
-      <div class="card border border-dark fixed">
-        <div class="card-header bg-dark"><h5 class="card-title text-light">Armor Worn</h5></div>
-        <div class="card-body" droppable [dropScope]="'rack'" (onDrop)="onItemDrop($event)">
-          <div *ngIf="armorWorn < 1" class="text-center">
-            <h4><i class="fas fa-caret-square-down"></i> Drag and Drop armor here</h4>
-          </div>
-          <div *ngFor="let item of armorWorn" draggable [dragScope]="'trash'" [dragData]="item">
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between">
-                  <h5 class="p-0">{{item.name | titlecase}}</h5>
-                  <div class="p-1 pr-2">{{item.price()}}d/{{item.baseWeight}}lb</div>
-                  <div class="p-1 text-center">Qlty:
-                    <a (click)="item.decreaseQuality()"><i class="far fa-minus-square"></i></a>
-                    {{item.quality}}
-                    <a (click)="item.increaseQuality()"><i class="far fa-plus-square"></i></a>
-                  </div>
-              </div>
-              <small>{{armorCoverageList(item) | titlecase}}</small>
-            </div>
-          </div>
+    <div class="card border border-dark fixed">
+      <div class="card-header bg-dark"><h5 class="card-title text-light">Armor Worn</h5></div>
+
+        <div class="p-1 text-left">Character sizefactor:
+          <a (click)="decreaseSizefactor()"><i class="far fa-minus-square"></i></a>
+          {{sizeFactor.toFixed(2)}}
+          <a (click)="increaseSizefactor()"><i class="far fa-plus-square"></i></a>
         </div>
-        <div class="card-footer pb-3 pt-3" droppable [dropScope]="'trash'" (onDrop)="onTrashDrop($event)">
-          <h5 [hidden]="armorWorn < 1"><i class="fas fa-trash"></i> Drop here to remove</h5>
+
+      <div class="card-body" droppable [dropScope]="'rack'" (onDrop)="onItemDrop($event)">
+        <div *ngIf="armorWorn < 1" class="text-center">
+          <h4><i class="fas fa-caret-square-down"></i> Drag and Drop armor here</h4>
+        </div>
+        <div *ngFor="let item of armorWorn" draggable [dragScope]="'trash'" [dragData]="item">
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+              <h5 class="p-0">{{item.name | titlecase}}</h5>
+              <div class="p-1 pr-2">{{item.currentWeight.toFixed(2)}} lb</div>
+              <div class="p-1 text-center">Qlty:
+                <a (click)="item.decreaseQuality()"><i class="far fa-minus-square"></i></a>
+                {{item.quality}}
+                <a (click)="item.increaseQuality()"><i class="far fa-plus-square"></i></a>
+              </div>
+              <div class="p-1 text-center">Weight:
+                <a (click)="item.decreaseWeight()"><i class="far fa-minus-square"></i></a>
+                {{item.weightfactor.toFixed(2)}}
+                <a (click)="item.increaseWeight()"><i class="far fa-plus-square"></i></a>
+              </div>
+            </div>
+            <small>{{armorCoverageList(item) | titlecase}}</small>
+          </div>
         </div>
       </div>
+      <div class="card-footer pb-3 pt-3" droppable [dropScope]="'trash'" (onDrop)="onTrashDrop($event)">
+        <h5 [hidden]="armorWorn < 1"><i class="fas fa-trash"></i> Drop here to remove</h5>
+      </div>
     </div>
+  </div>
+
+
 
     <div class="col-md-4">
       <app-protection-table [armorWorn]="armorWorn"></app-protection-table>
