@@ -1,3 +1,8 @@
+#Fork info:
+I just forked this repo so I can adjust the armour coverages, weights to my own purposes ( ie: harnmaster gold). I also added weight calculations to save some manual effort. 
+That is the extent of the changes to the original
+
+
 # HarnTools
 
 These are some simple tools for the tabletop roleplaying system Harn Master and it's setting, Harn World.
