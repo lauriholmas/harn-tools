@@ -191,7 +191,7 @@ var AppModule = (function () {
 /***/ "../../../../../src/app/armor/armor-list/armor-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid page\">\n  <h2>Armor, because.... look out behind you!!!</h2>\n  <div class=\"row\">\n\n    <div class=\"col-md-4\">\n      <div class=\"card border border-dark\">\n        <div class=\"card-header bg-dark text-light\"><h5 class=\"card-title col-xs-8\">Available Armor</h5>\n        </div>\n        <div class=\"card-header text-center pb-1 pt-1\">\n          <div class=\"btn-group btn-group-sm\" role=\"group\" aria-label=\"First group\">\n            <button type=\"button\" class=\"btn btn-secondary\" (click)=\"filterArmor()\">All</button>\n            <button\n              type=\"button\"\n              class=\"btn btn-secondary\"\n              *ngFor=\"let armortType of armorTypes\"\n              (click)=\"filterArmor(armortType)\">{{armortType | titlecase}}\n            </button>\n          </div>\n        </div>\n        <div class=\"card-body\">\n\n          <div *ngFor=\"let item of armorDisplayList\" class=\"list-group-item row\" draggable [dragScope]=\"'rack'\"\n               [dragData]=\"item\">\n            <div class=\"d-flex p-0 m-0\">\n              <div class=\"w-100 justify-content-between\">\n                <h5 class=\"mb-1\">{{item.name | titlecase}}</h5>\n                <small>{{item.basePrice}}d/{{item.baseWeight}}lb</small>\n              </div>\n              <div class=\"w-100 p-0 m-0\">\n                <small>{{armorCoverageList(item) | titlecase}}</small>\n              </div>\n            </div>\n          </div>\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-md-4\">\n      <div class=\"card border border-dark fixed\">\n        <div class=\"card-header bg-dark\"><h5 class=\"card-title text-light\">Armor Worn</h5></div>\n        <div class=\"card-body\" droppable [dropScope]=\"'rack'\" (onDrop)=\"onItemDrop($event)\">\n          <div *ngIf=\"armorWorn < 1\" class=\"text-center\">\n            <h4><i class=\"fas fa-caret-square-down\"></i> Drag and Drop armor here</h4>\n          </div>\n          <div *ngFor=\"let item of armorWorn\" draggable [dragScope]=\"'trash'\" [dragData]=\"item\">\n            <div class=\"list-group-item\">\n              <div class=\"d-flex justify-content-between\">\n                  <h5 class=\"p-0\">{{item.name | titlecase}}</h5>\n                  <div class=\"p-1 pr-2\">{{item.price()}}d/{{item.baseWeight}}lb</div>\n                  <div class=\"p-1 text-center\">Qlty:\n                    <a (click)=\"item.decreaseQuality()\"><i class=\"far fa-minus-square\"></i></a>\n                    {{item.quality}}\n                    <a (click)=\"item.increaseQuality()\"><i class=\"far fa-plus-square\"></i></a>\n                  </div>\n              </div>\n              <small>{{armorCoverageList(item) | titlecase}}</small>\n            </div>\n          </div>\n        </div>\n        <div class=\"card-footer pb-3 pt-3\" droppable [dropScope]=\"'trash'\" (onDrop)=\"onTrashDrop($event)\">\n          <h5 [hidden]=\"armorWorn < 1\"><i class=\"fas fa-trash\"></i> Drop here to remove</h5>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-md-4\">\n      <app-protection-table [armorWorn]=\"armorWorn\"></app-protection-table>\n    </div>\n\n  </div>\n</div>\n"
+module.exports = "<div class=\"container-fluid page\">\n  <h2>Armor Builder - forked from <a href=\"https://streamweaver.github.io/harn-tools/armor\"> streamweaver.github.io/harn-tools</a> </h2>\n  <p>A simple drag and drop armor assembler based on Harnmaster gold armor values. </p>\n  <div class=\"row\">\n    <div class=\"col-md-4\">\n      <div class=\"card border border-dark\">\n        <div class=\"card-header bg-dark text-light\"><h5 class=\"card-title col-xs-8\">Available Armor</h5>\n        </div>\n        <div class=\"card-header text-center pb-1 pt-1\">\n          <div class=\"btn-group btn-group-sm\" role=\"group\" aria-label=\"First group\">\n            <button type=\"button\" class=\"btn btn-secondary\" (click)=\"filterArmor()\">All</button>\n            <button\n              type=\"button\"\n              class=\"btn btn-secondary\"\n              *ngFor=\"let armortType of armorTypes\"\n              (click)=\"filterArmor(armortType)\">{{armortType | titlecase}}\n            </button>\n          </div>\n        </div>\n        <div class=\"card-body\">\n\n          <div *ngFor=\"let item of armorDisplayList\" class=\"list-group-item row\" draggable [dragScope]=\"'rack'\"\n               [dragData]=\"item\">\n            <div class=\"d-flex p-0 m-0\">\n              <div class=\"w-100 justify-content-between\">\n                <h5 class=\"mb-1\">{{item.name | titlecase}}</h5>\n                <small>{{item.baseWeight}} lb</small>\n              </div>\n              <div class=\"w-100 p-0 m-0\">\n                <small>{{armorCoverageList(item) | titlecase}}</small>\n              </div>\n            </div>\n          </div>\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-md-4\">\n    <div class=\"card border border-dark fixed\">\n      <div class=\"card-header bg-dark\"><h5 class=\"card-title text-light\">Armor Worn</h5></div>\n\n        <div class=\"p-1 text-left\">Character sizefactor:\n          <a (click)=\"decreaseSizefactor()\"><i class=\"far fa-minus-square\"></i></a>\n          {{sizeFactor.toFixed(2)}}\n          <a (click)=\"increaseSizefactor()\"><i class=\"far fa-plus-square\"></i></a>\n        </div>\n\n      <div class=\"card-body\" droppable [dropScope]=\"'rack'\" (onDrop)=\"onItemDrop($event)\">\n        <div *ngIf=\"armorWorn < 1\" class=\"text-center\">\n          <h4><i class=\"fas fa-caret-square-down\"></i> Drag and Drop armor here</h4>\n        </div>\n        <div *ngFor=\"let item of armorWorn\" draggable [dragScope]=\"'trash'\" [dragData]=\"item\">\n          <div class=\"list-group-item\">\n            <div class=\"d-flex justify-content-between\">\n              <h5 class=\"p-0\">{{item.name | titlecase}}</h5>\n              <div class=\"p-1 pr-2\">{{item.currentWeight.toFixed(2)}} lb</div>\n              <div class=\"p-1 text-center\">Qlty:\n                <a (click)=\"item.decreaseQuality()\"><i class=\"far fa-minus-square\"></i></a>\n                {{item.quality}}\n                <a (click)=\"item.increaseQuality()\"><i class=\"far fa-plus-square\"></i></a>\n              </div>\n              <div class=\"p-1 text-center\">Weight:\n                <a (click)=\"item.decreaseWeight()\"><i class=\"far fa-minus-square\"></i></a>\n                {{item.weightfactor.toFixed(2)}}\n                <a (click)=\"item.increaseWeight()\"><i class=\"far fa-plus-square\"></i></a>\n              </div>\n            </div>\n            <small>{{armorCoverageList(item) | titlecase}}</small>\n          </div>\n        </div>\n      </div>\n      <div class=\"card-footer pb-3 pt-3\" droppable [dropScope]=\"'trash'\" (onDrop)=\"onTrashDrop($event)\">\n        <h5 [hidden]=\"armorWorn < 1\"><i class=\"fas fa-trash\"></i> Drop here to remove</h5>\n      </div>\n    </div>\n  </div>\n\n\n\n    <div class=\"col-md-4\">\n      <app-protection-table [armorWorn]=\"armorWorn\"></app-protection-table>\n    </div>\n\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -246,6 +246,7 @@ var ArmorListComponent = (function () {
         var _this = this;
         this.armorTypes = __WEBPACK_IMPORTED_MODULE_2__shared_armor_data__["c" /* ArmorTypes */];
         this.armorLoaded = false;
+        this.sizeFactor = 1.00;
         this.armorService.loadArmor().subscribe(function (armorList) { return _this.armorList = armorList; }, function (err) { return console.log(err); }, function () {
             _this.armorList = _this.sortArmorList(_this.armorList);
             _this.filterArmor();
@@ -265,7 +266,7 @@ var ArmorListComponent = (function () {
         }
     };
     ArmorListComponent.prototype.addWornArmor = function (data) {
-        this.armorWorn.push(new __WEBPACK_IMPORTED_MODULE_3__shared_armor_model__["a" /* ArmorPiece */](data));
+        this.armorWorn.push(new __WEBPACK_IMPORTED_MODULE_3__shared_armor_model__["a" /* ArmorPiece */](this.sizeFactor, data));
     };
     ArmorListComponent.prototype.removeWornArmor = function (data) {
         var idx = this.armorWorn.indexOf(data);
@@ -329,6 +330,24 @@ var ArmorListComponent = (function () {
             }
         }
         return props.join(', ');
+    };
+    ArmorListComponent.prototype.decreaseSizefactor = function () {
+        this.sizeFactor = this.sizeFactor - 0.1;
+        if (this.sizeFactor < 0.7) {
+            this.sizeFactor = 0.7;
+        }
+        this.updateSizeFactor();
+    };
+    ArmorListComponent.prototype.increaseSizefactor = function () {
+        this.sizeFactor = this.sizeFactor + 0.1;
+        if (this.sizeFactor > 1.3) {
+            this.sizeFactor = 1.3;
+        }
+        this.updateSizeFactor();
+    };
+    ArmorListComponent.prototype.updateSizeFactor = function () {
+        var _this = this;
+        this.armorWorn.forEach(function (element) { return element.updateArmourSizefactor(_this.sizeFactor); });
     };
     ArmorListComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -458,7 +477,7 @@ var ProtectionTableComponent = (function () {
         var weight = 0;
         for (var _i = 0, _a = this.armorWorn; _i < _a.length; _i++) {
             var item = _a[_i];
-            weight += item.baseWeight;
+            weight += item.currentWeight;
         }
         return weight;
     };
@@ -523,52 +542,52 @@ var DamageTypes = [
 ];
 var ProtectionValue = {
     'cloth': {
-        'blunt': 1,
+        'blunt': 0,
         'edge': 1,
-        'point': 1,
+        'point': 0,
         'fire': 1,
     },
     'quilt': {
         'blunt': 5,
-        'edge': 3,
-        'point': 2,
-        'fire': 4,
+        'edge': 1,
+        'point': 1,
+        'fire': 3,
     },
     'leather': {
-        'blunt': 2,
-        'edge': 4,
-        'point': 3,
+        'blunt': 1,
+        'edge': 2,
+        'point': 1,
         'fire': 3,
     },
     'kurbul': {
         'blunt': 4,
-        'edge': 5,
-        'point': 4,
+        'edge': 4,
+        'point': 3,
         'fire': 3,
     },
     'ring': {
-        'blunt': 3,
-        'edge': 6,
-        'point': 4,
+        'blunt': 2,
+        'edge': 5,
+        'point': 1,
         'fire': 3,
     },
     'mail': {
         'blunt': 2,
-        'edge': 8,
-        'point': 5,
-        'fire': 1,
+        'edge': 7,
+        'point': 6,
+        'fire': 4,
     },
     'scale': {
-        'blunt': 5,
-        'edge': 9,
+        'blunt': 3,
+        'edge': 5,
         'point': 4,
-        'fire': 5,
+        'fire': 4,
     },
     'plate': {
-        'blunt': 6,
-        'edge': 10,
-        'point': 6,
-        'fire': 2,
+        'blunt': 5,
+        'edge': 8,
+        'point': 7,
+        'fire': 5,
     },
 };
 /**
@@ -627,9 +646,12 @@ var ArmorLocationCodes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__armor_data__ = __webpack_require__("../../../../../src/app/armor/shared/armor.data.ts");
 
 var ArmorPiece = (function () {
-    function ArmorPiece(init) {
+    function ArmorPiece(sf, init) {
         Object.assign(this, init);
         this.quality = 1;
+        this.weightfactor = 1.00;
+        this.sizefactor = sf;
+        this.countWeight();
     }
     Object.defineProperty(ArmorPiece.prototype, "quality", {
         get: function () {
@@ -662,6 +684,21 @@ var ArmorPiece = (function () {
         else {
             this.quality -= 1;
         }
+    };
+    ArmorPiece.prototype.updateArmourSizefactor = function (sf) {
+        this.sizefactor = sf;
+        this.countWeight();
+    };
+    ArmorPiece.prototype.increaseWeight = function () {
+        this.weightfactor = this.weightfactor + 0.05;
+        this.countWeight();
+    };
+    ArmorPiece.prototype.decreaseWeight = function () {
+        this.weightfactor = this.weightfactor - 0.05;
+        this.countWeight();
+    };
+    ArmorPiece.prototype.countWeight = function () {
+        this.currentWeight = this.baseWeight * this.weightfactor * this.sizefactor;
     };
     ArmorPiece.prototype.maxQuality = function () {
         return Math.max(__WEBPACK_IMPORTED_MODULE_0__armor_data__["e" /* ProtectionValue */][this.type]['blunt'], __WEBPACK_IMPORTED_MODULE_0__armor_data__["e" /* ProtectionValue */][this.type]['edge'], __WEBPACK_IMPORTED_MODULE_0__armor_data__["e" /* ProtectionValue */][this.type]['point'], __WEBPACK_IMPORTED_MODULE_0__armor_data__["e" /* ProtectionValue */][this.type]['fire']);
